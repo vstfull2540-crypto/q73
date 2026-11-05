@@ -1,0 +1,23 @@
+name: Build Windows VST3
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -A x64
+      - name: Build VST3 and Standalone
+        run: cmake --build build --config Release --parallel
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Arm-Nongmuang-LA2A-Windows
+          path: build/ArmNongmuangLA2A_artefacts/Release/**
+          if-no-files-found: warn
